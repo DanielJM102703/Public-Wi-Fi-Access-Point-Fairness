@@ -1,50 +1,56 @@
-/**
- * Wrap words to a specified length.
- */
-export = wrap;
+declare class Queue<ValueType> implements Iterable<ValueType> {
+	/**
+	The size of the queue.
+	*/
+	readonly size: number;
 
-declare function wrap(str: string, options?: wrap.IOptions): string;
+	/**
+	Tiny queue data structure.
 
-declare namespace wrap {
-    export interface IOptions {
+	The instance is an [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols), which means you can iterate over the queue front to back with a “for…of” loop, or use spreading to convert the queue to an array. Don't do this unless you really need to though, since it's slow.
 
-        /**
-         * The width of the text before wrapping to a new line.
-         * @default ´50´
-         */
-        width?: number;
+	@example
+	```
+	import Queue = require('yocto-queue');
 
-        /**
-         * The string to use at the beginning of each line.
-         * @default ´  ´ (two spaces)
-         */
-        indent?: string;
+	const queue = new Queue();
 
-        /**
-         * The string to use at the end of each line.
-         * @default ´\n´
-         */
-        newline?: string;
+	queue.enqueue('🦄');
+	queue.enqueue('🌈');
 
-        /**
-         * An escape function to run on each line after splitting them.
-         * @default (str: string) => string;
-         */
-        escape?: (str: string) => string;
+	console.log(queue.size);
+	//=> 2
 
-        /**
-         * Trim trailing whitespace from the returned string.
-         * This option is included since .trim() would also strip
-         * the leading indentation from the first line.
-         * @default true
-         */
-        trim?: boolean;
+	console.log(...queue);
+	//=> '🦄 🌈'
 
-        /**
-         * Break a word between any two letters when the word is longer
-         * than the specified width.
-         * @default false
-         */
-        cut?: boolean;
-    }
+	console.log(queue.dequeue());
+	//=> '🦄'
+
+	console.log(queue.dequeue());
+	//=> '🌈'
+	```
+	*/
+	constructor();
+
+	[Symbol.iterator](): IterableIterator<ValueType>;
+
+	/**
+	Add a value to the queue.
+	*/
+	enqueue(value: ValueType): void;
+
+	/**
+	Remove the next value in the queue.
+
+	@returns The removed value or `undefined` if the queue is empty.
+	*/
+	dequeue(): ValueType | undefined;
+
+	/**
+	Clear the queue.
+	*/
+	clear(): void;
 }
+
+export = Queue;
